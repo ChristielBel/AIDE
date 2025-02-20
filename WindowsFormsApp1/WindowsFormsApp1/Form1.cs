@@ -20,7 +20,7 @@ namespace WindowsFormsApp1
         private void button1_Click(object sender, EventArgs e)
         {
             string name = textBox1.Text;
-            string city = comboBox1.ToString();
+            string city = comboBox1.SelectedItem.ToString();
             string gender = "";
             if (radioButton1.Checked) gender = radioButton1.Text;
             else if (radioButton2.Checked) gender = radioButton2.Text;
@@ -33,6 +33,8 @@ namespace WindowsFormsApp1
             User user = new User(name, city, gender, sport);
 
             richTextBox1.Text = user.toString();
+
+            MessageBox.Show("Correct!");
         }
     }
 
