@@ -67,7 +67,7 @@ namespace WindowsFormsApp1
 
             for(int i = 0; i < users.Count; i++)
             {
-                wsh.Cells[i+2, 1] = users[i].Name;
+                wsh.Cells[i + 2, 1] = users[i].Name;
                 wsh.Cells[i + 2, 2] = users[i].City;
                 wsh.Cells[i + 2, 3] = users[i].Gender;
                 wsh.Cells[i + 2, 4] = users[i].Sport;
