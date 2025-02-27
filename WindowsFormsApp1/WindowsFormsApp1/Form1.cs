@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Office.Interop.Excel;
 
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
+        List<User> users = new List<User>();
+
         public Form1()
         {
             InitializeComponent();
@@ -32,9 +35,46 @@ namespace WindowsFormsApp1
 
             User user = new User(name, city, gender, sport);
 
-            richTextBox1.Text = user.toString();
+            users.Add(user);
 
-            MessageBox.Show("Correct!");
+            richTextBox1.Clear();
+
+            for(int i = 0; i < users.Count; i++)
+            {
+                richTextBox1.AppendText("User " + (i + 1) + Environment.NewLine + users[i].toString() + Environment.NewLine);
+            }
+
+            MessageBox.Show("You have successfully added a user!");
+        }
+
+        private void buttonExcel_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.ShowDialog();
+            String filename = ofd.FileName;
+
+            Microsoft.Office.Interop.Excel.Application excelObj = new Microsoft.Office.Interop.Excel.Application();
+            excelObj.Visible = true;
+
+            Workbook wb = excelObj.Workbooks.Open(filename, 0, false, 5, "","",false, XlPlatform.xlWindows, "",true,false,0,true,false,false);
+
+            Worksheet wsh = wb.Sheets[1];
+
+            wsh.Cells[1, 1] = "Name";
+            wsh.Cells[1, 2] = "City";
+            wsh.Cells[1, 3] = "Gender";
+            wsh.Cells[1, 4] = "Sport";
+
+            for(int i = 0; i < users.Count; i++)
+            {
+                wsh.Cells[i+2, 1] = users[i].Name;
+                wsh.Cells[i + 2, 2] = users[i].City;
+                wsh.Cells[i + 2, 3] = users[i].Gender;
+                wsh.Cells[i + 2, 4] = users[i].Sport;
+            }
+
+            wb.Save();
+
         }
     }
 
