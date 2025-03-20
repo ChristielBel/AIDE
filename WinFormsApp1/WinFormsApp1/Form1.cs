@@ -23,5 +23,11 @@ namespace WinFormsApp1
             FormProduct fp = new FormProduct(con);
             fp.ShowDialog();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            FormClient fc = new FormClient(con);
+            fc.ShowDialog();
+        }
     }
 }

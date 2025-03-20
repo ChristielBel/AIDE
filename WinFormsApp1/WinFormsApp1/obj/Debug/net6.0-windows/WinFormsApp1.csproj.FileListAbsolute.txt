@@ -25,3 +25,5 @@ Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\ref\WinFormsApp1.dll
 Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.pdb
 Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.genruntimeconfig.cache
 Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.AddProductForm.resources
+Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.AddClientForm.resources
+Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.FormClient.resources
