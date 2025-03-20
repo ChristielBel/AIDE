@@ -72,6 +72,7 @@
             this.ljfbmToolStripMenuItem.Name = "ljfbmToolStripMenuItem";
             this.ljfbmToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.ljfbmToolStripMenuItem.Text = "добавить";
+            this.ljfbmToolStripMenuItem.Click += new System.EventHandler(this.ljfbmToolStripMenuItem_Click);
             // 
             // удалитьизменитьToolStripMenuItem
             // 
@@ -84,6 +85,7 @@
             this.удалитьToolStripMenuItem.Name = "удалитьToolStripMenuItem";
             this.удалитьToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
             this.удалитьToolStripMenuItem.Text = "удалить";
+            this.удалитьToolStripMenuItem.Click += new System.EventHandler(this.удалитьToolStripMenuItem_Click);
             // 
             // выходToolStripMenuItem
             // 

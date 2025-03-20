@@ -37,5 +37,27 @@ namespace WinFormsApp1
             dataGridView1.Columns[2].HeaderText = "Ед.измерения";
             this.StartPosition = FormStartPosition.CenterScreen;
         }
+
+        //добавить
+        private void ljfbmToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddProductForm f = new AddProductForm(con);
+            f.ShowDialog();
+            Update();
+        }
+
+        //удалить
+        private void удалитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)dataGridView1.CurrentRow.Cells["ID"].Value;
+                NpgsqlCommand command = new NpgsqlCommand("DELETE FROM Product WHERE ID = :id", con);
+                command.Parameters.AddWithValue("id", id);
+                command.ExecuteNonQuery();
+                Update();
+            }
+            catch (Exception ex) { }
+        }
     }
 }
