@@ -72,5 +72,11 @@ namespace WinFormsApp1
             f.ShowDialog();
             Update();
         }
+
+        // выход
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
