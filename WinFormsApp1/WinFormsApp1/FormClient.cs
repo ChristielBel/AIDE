@@ -60,5 +60,17 @@ namespace WinFormsApp1
             }
             catch (Exception ex) { }
         }
+
+        // изменить
+        private void изменитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)dataGridView1.CurrentRow.Cells["ID"].Value;
+            string name = (string)dataGridView1.CurrentRow.Cells["name"].Value;
+            string address = (string)dataGridView1.CurrentRow.Cells["address"].Value;
+            string phone = (string)dataGridView1.CurrentRow.Cells["phone"].Value;
+            AddClientForm f = new AddClientForm(con, id, name, address, phone);
+            f.ShowDialog();
+            Update();
+        }
     }
 }
