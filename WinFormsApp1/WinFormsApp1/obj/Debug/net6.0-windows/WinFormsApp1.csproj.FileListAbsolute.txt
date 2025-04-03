@@ -27,3 +27,4 @@ Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.genrunti
 Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.AddProductForm.resources
 Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.AddClientForm.resources
 Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.FormClient.resources
+Z:\aide\WinFormsApp1\WinFormsApp1\obj\Debug\net6.0-windows\WinFormsApp1.FormFutura.resources
