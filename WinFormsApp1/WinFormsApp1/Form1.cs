@@ -29,11 +29,5 @@ namespace WinFormsApp1
             FormClient fc = new FormClient(con);
             fc.ShowDialog();
         }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            FormFutura fc = new FormFutura(con);
-            fc.ShowDialog();
-        }
     }
 }
