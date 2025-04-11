@@ -45,7 +45,7 @@ namespace WinFormsApp1
                     command.ExecuteNonQuery();
                     Close();
                 }
-                catch (Exception ee) { MessageBox.Show("ААААААААААААА"); }
+                catch  { }
             }
             else
             {

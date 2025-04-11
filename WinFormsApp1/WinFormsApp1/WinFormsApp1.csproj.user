@@ -5,6 +5,9 @@
     <Compile Update="AddClientForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="AddFuturaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="AddProductForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -12,6 +15,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="FormClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormFutura.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="FormProduct.cs">
