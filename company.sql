@@ -1,50 +1,11 @@
--- Создание таблицы employees
+-- Создание и заполнение таблицы employees
 CREATE TABLE employees (
     employee_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    department VARCHAR(50) NOT NULL,
-    balance NUMERIC(15,2) DEFAULT 0.00
+    name VARCHAR(150) NOT NULL,
+    department VARCHAR(100),
+    balance NUMERIC(15,2) DEFAULT 0
 );
 
--- Создание таблицы advances
-CREATE TABLE advances (
-    advance_id SERIAL PRIMARY KEY,
-    employee_id INT NOT NULL,
-    date DATE NOT NULL,
-    sum NUMERIC(15,2) NOT NULL,
-    reported BOOLEAN NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
-);
-
--- Создание таблицы reports
-CREATE TABLE reports (
-    report_id SERIAL PRIMARY KEY,
-    advance_id INT NOT NULL,
-    date DATE NOT NULL,
-    sum NUMERIC(15,2) NOT NULL,
-    FOREIGN KEY (advance_id) REFERENCES advances(advance_id)
-);
-
--- Создание таблицы expenses
-CREATE TABLE expenses (
-    expense_id SERIAL PRIMARY KEY,
-    report_id INT NOT NULL,
-    category VARCHAR(50) NOT NULL,
-    quantity INT NOT NULL,
-    sum NUMERIC(15,2) NOT NULL,
-    FOREIGN KEY (report_id) REFERENCES reports(report_id)
-);
-
--- Создание таблицы balances
-CREATE TABLE balances (
-    id SERIAL PRIMARY KEY,
-    employee_id INT NOT NULL,
-    month CHAR(7) NOT NULL, -- YYYY-MM
-    end_balance NUMERIC(15,2) NOT NULL,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
-);
-
--- Заполнение таблицы employees
 INSERT INTO employees (name, department, balance) VALUES
 ('Иванов Иван Иванович', 'Отдел продаж', 25000.00),
 ('Петрова Светлана Викторовна', 'Бухгалтерия', 0.00),
@@ -57,7 +18,16 @@ INSERT INTO employees (name, department, balance) VALUES
 ('Егорова Марина Валерьевна', 'Отдел логистики', 21000.00),
 ('Зайцев Роман Андреевич', 'Отдел маркетинга', 4000.00);
 
--- Заполнение таблицы advances
+-- Создание и заполнение таблицы advances
+CREATE TABLE advances (
+    id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    date DATE NOT NULL,
+    sum NUMERIC(15,2) NOT NULL,
+    reported BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
 INSERT INTO advances (employee_id, date, sum, reported) VALUES
 (1, '2025-05-10', 20000.00, TRUE),
 (1, '2025-05-20', 15000.00, FALSE),
@@ -74,7 +44,15 @@ INSERT INTO advances (employee_id, date, sum, reported) VALUES
 (3, '2025-05-22', 10500.00, FALSE),
 (2, '2025-05-24', 7500.00, TRUE);
 
--- Заполнение таблицы reports
+-- Создание и заполнение таблицы reports
+CREATE TABLE reports (
+    id SERIAL PRIMARY KEY,
+    advance_id INT NOT NULL,
+    date DATE NOT NULL,
+    sum NUMERIC(15,2) NOT NULL,
+    FOREIGN KEY (advance_id) REFERENCES advances(id)
+);
+
 INSERT INTO reports (advance_id, date, sum) VALUES
 (1, '2025-05-17', 18500.00),
 (3, '2025-05-22', 9500.00),
@@ -87,7 +65,16 @@ INSERT INTO reports (advance_id, date, sum) VALUES
 (12, '2025-05-23', 9300.00),
 (14, '2025-05-25', 7400.00);
 
--- Заполнение таблицы expenses (удалены записи с report_id=11)
+-- Создание и заполнение таблицы expenses
+CREATE TABLE expenses (
+    id SERIAL PRIMARY KEY,
+    report_id INT NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    quantity NUMERIC(10,2) NOT NULL,
+    sum NUMERIC(15,2) NOT NULL,
+    FOREIGN KEY (report_id) REFERENCES reports(id)
+);
+
 INSERT INTO expenses (report_id, category, quantity, sum) VALUES
 (1, 'Командировочные расходы', 1, 12000.00),
 (1, 'Транспорт', 4, 4500.00),
@@ -108,7 +95,15 @@ INSERT INTO expenses (report_id, category, quantity, sum) VALUES
 (9, 'Маркетинг', 1, 7000.00),
 (10, 'Транспортировка', 3, 9300.00);
 
--- Заполнение таблицы balances
+-- Создание и заполнение таблицы balances
+CREATE TABLE balances (
+    id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    month CHAR(7) NOT NULL,
+    end_balance NUMERIC(15,2) NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
 INSERT INTO balances (employee_id, month, end_balance) VALUES
 (1, '2025-04', 5000.00),
 (2, '2025-04', 0.00),
