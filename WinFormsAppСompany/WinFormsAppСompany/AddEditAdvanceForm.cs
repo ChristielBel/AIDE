@@ -32,8 +32,15 @@ namespace WinFormsAppСompany
                 _datePicker.Value = date ?? DateTime.Now;
                 _sumTextBox.Text = sum?.ToString("N2") ?? "";
 
-                _employeeComboBox.Items.Add(employeeName);
-                _employeeComboBox.SelectedIndex = 0;
+                LoadEmployees(); 
+                foreach (EmployeeItem item in _employeeComboBox.Items)
+                {
+                    if (item.Name == employeeName)
+                    {
+                        _employeeComboBox.SelectedItem = item;
+                        break;
+                    }
+                }
                 _employeeComboBox.Enabled = false;
             }
             else

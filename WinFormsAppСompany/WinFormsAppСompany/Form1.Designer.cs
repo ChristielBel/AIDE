@@ -80,12 +80,11 @@
             advancesToolStripMenuItem.Name = "advancesToolStripMenuItem";
             advancesToolStripMenuItem.Size = new Size(61, 20);
             advancesToolStripMenuItem.Text = "Авансы";
-            advancesToolStripMenuItem.Click += advancesToolStripMenuItem_Click;
             // 
             // выдатьАвансToolStripMenuItem
             // 
             выдатьАвансToolStripMenuItem.Name = "выдатьАвансToolStripMenuItem";
-            выдатьАвансToolStripMenuItem.Size = new Size(178, 22);
+            выдатьАвансToolStripMenuItem.Size = new Size(180, 22);
             выдатьАвансToolStripMenuItem.Text = "Просмотр авансов";
             выдатьАвансToolStripMenuItem.Click += advancesToolStripMenuItem_Click;
             // 
@@ -115,14 +114,14 @@
             // отчетПоОстаткамToolStripMenuItem
             // 
             отчетПоОстаткамToolStripMenuItem.Name = "отчетПоОстаткамToolStripMenuItem";
-            отчетПоОстаткамToolStripMenuItem.Size = new Size(180, 22);
+            отчетПоОстаткамToolStripMenuItem.Size = new Size(176, 22);
             отчетПоОстаткамToolStripMenuItem.Text = "Отчет по остаткам";
             отчетПоОстаткамToolStripMenuItem.Click += отчетПоОстаткамToolStripMenuItem_Click;
             // 
             // графикОстатковToolStripMenuItem
             // 
             графикОстатковToolStripMenuItem.Name = "графикОстатковToolStripMenuItem";
-            графикОстатковToolStripMenuItem.Size = new Size(180, 22);
+            графикОстатковToolStripMenuItem.Size = new Size(176, 22);
             графикОстатковToolStripMenuItem.Text = "График остатков";
             графикОстатковToolStripMenuItem.Click += графикОстатковToolStripMenuItem_Click;
             // 
