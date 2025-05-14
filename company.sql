@@ -1,4 +1,4 @@
--- Создание и заполнение таблицы employees
+-- Создание таблицы employees
 CREATE TABLE employees (
     employee_id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
@@ -6,6 +6,93 @@ CREATE TABLE employees (
     balance NUMERIC(15,2) DEFAULT 0
 );
 
+-- Создание таблицы advances
+CREATE TABLE advances (
+    id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    date DATE NOT NULL,
+    sum NUMERIC(15,2) NOT NULL,
+    reported BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
+-- Создание таблицы reports (сначала без внешнего ключа)
+CREATE TABLE reports (
+    id SERIAL PRIMARY KEY,
+    advance_id INT NOT NULL,
+    date DATE NOT NULL,
+    sum NUMERIC(15,2) NOT NULL DEFAULT 0
+);
+
+-- Создание таблицы expenses
+CREATE TABLE expenses (
+    id SERIAL PRIMARY KEY,
+    report_id INT NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    quantity NUMERIC(10,2) NOT NULL,
+    sum NUMERIC(15,2) NOT NULL,
+    FOREIGN KEY (report_id) REFERENCES reports(id)
+);
+
+-- Создание таблицы balances
+CREATE TABLE balances (
+    id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    month CHAR(7) NOT NULL,
+    end_balance NUMERIC(15,2) NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
+-- Функция для обновления суммы в отчете
+CREATE OR REPLACE FUNCTION update_report_sum()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE reports 
+    SET sum = (
+        SELECT COALESCE(SUM(sum), 0)
+        FROM expenses
+        WHERE report_id = COALESCE(NEW.report_id, OLD.report_id)
+    )
+    WHERE id = COALESCE(NEW.report_id, OLD.report_id);
+    
+    -- Обновляем статус reported в таблице advances
+    UPDATE advances a
+    SET reported = EXISTS (
+        SELECT 1 FROM reports r 
+        WHERE r.advance_id = a.id AND r.sum > 0
+    )
+    WHERE a.id = (
+        SELECT advance_id FROM reports 
+        WHERE id = COALESCE(NEW.report_id, OLD.report_id)
+    );
+    
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Триггеры для автоматического обновления суммы отчета
+CREATE TRIGGER expenses_after_insert
+AFTER INSERT ON expenses
+FOR EACH ROW
+EXECUTE FUNCTION update_report_sum();
+
+CREATE TRIGGER expenses_after_update
+AFTER UPDATE ON expenses
+FOR EACH ROW
+WHEN (OLD.sum <> NEW.sum OR OLD.report_id <> NEW.report_id)
+EXECUTE FUNCTION update_report_sum();
+
+CREATE TRIGGER expenses_after_delete
+AFTER DELETE ON expenses
+FOR EACH ROW
+EXECUTE FUNCTION update_report_sum();
+
+-- Теперь добавляем внешний ключ в reports
+ALTER TABLE reports 
+ADD CONSTRAINT reports_advance_id_fkey 
+FOREIGN KEY (advance_id) REFERENCES advances(id);
+
+-- Заполнение таблицы employees
 INSERT INTO employees (name, department, balance) VALUES
 ('Иванов Иван Иванович', 'Отдел продаж', 25000.00),
 ('Петрова Светлана Викторовна', 'Бухгалтерия', 0.00),
@@ -18,63 +105,37 @@ INSERT INTO employees (name, department, balance) VALUES
 ('Егорова Марина Валерьевна', 'Отдел логистики', 21000.00),
 ('Зайцев Роман Андреевич', 'Отдел маркетинга', 4000.00);
 
--- Создание и заполнение таблицы advances
-CREATE TABLE advances (
-    id SERIAL PRIMARY KEY,
-    employee_id INT NOT NULL,
-    date DATE NOT NULL,
-    sum NUMERIC(15,2) NOT NULL,
-    reported BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
-);
+-- Заполнение таблицы advances
+INSERT INTO advances (employee_id, date, sum) VALUES
+(1, '2025-05-10', 20000.00),
+(1, '2025-05-20', 15000.00),
+(2, '2025-05-15', 10000.00),
+(3, '2025-05-05', 25000.00),
+(4, '2025-05-12', 8000.00),
+(5, '2025-05-18', 20000.00),
+(6, '2025-05-05', 9000.00),
+(6, '2025-05-10', 5000.00),
+(7, '2025-05-12', 11000.00),
+(8, '2025-05-14', 6000.00),
+(9, '2025-05-15', 7000.00),
+(10, '2025-05-20', 9500.00),
+(3, '2025-05-22', 10500.00),
+(2, '2025-05-24', 7500.00);
 
-INSERT INTO advances (employee_id, date, sum, reported) VALUES
-(1, '2025-05-10', 20000.00, TRUE),
-(1, '2025-05-20', 15000.00, FALSE),
-(2, '2025-05-15', 10000.00, TRUE),
-(3, '2025-05-05', 25000.00, TRUE),
-(4, '2025-05-12', 8000.00, FALSE),
-(5, '2025-05-18', 20000.00, TRUE),
-(6, '2025-05-05', 9000.00, FALSE),
-(6, '2025-05-10', 5000.00, TRUE),
-(7, '2025-05-12', 11000.00, TRUE),
-(8, '2025-05-14', 6000.00, FALSE),
-(9, '2025-05-15', 7000.00, TRUE),
-(10, '2025-05-20', 9500.00, TRUE),
-(3, '2025-05-22', 10500.00, FALSE),
-(2, '2025-05-24', 7500.00, TRUE);
+-- Заполнение таблицы reports (сумма будет 0, так как расходов еще нет)
+INSERT INTO reports (advance_id, date) VALUES
+(1, '2025-05-17'),
+(3, '2025-05-22'),
+(4, '2025-05-15'),
+(6, '2025-05-25'),
+(7, '2025-05-11'),
+(8, '2025-05-13'),
+(10, '2025-05-16'),
+(11, '2025-05-18'),
+(12, '2025-05-23'),
+(14, '2025-05-25');
 
--- Создание и заполнение таблицы reports
-CREATE TABLE reports (
-    id SERIAL PRIMARY KEY,
-    advance_id INT NOT NULL,
-    date DATE NOT NULL,
-    sum NUMERIC(15,2) NOT NULL,
-    FOREIGN KEY (advance_id) REFERENCES advances(id)
-);
-
-INSERT INTO reports (advance_id, date, sum) VALUES
-(1, '2025-05-17', 18500.00),
-(3, '2025-05-22', 9500.00),
-(4, '2025-05-15', 23000.00),
-(6, '2025-05-25', 19500.00),
-(7, '2025-05-11', 4900.00),
-(8, '2025-05-13', 10000.00),
-(10, '2025-05-16', 5800.00),
-(11, '2025-05-18', 7000.00),
-(12, '2025-05-23', 9300.00),
-(14, '2025-05-25', 7400.00);
-
--- Создание и заполнение таблицы expenses
-CREATE TABLE expenses (
-    id SERIAL PRIMARY KEY,
-    report_id INT NOT NULL,
-    category VARCHAR(100) NOT NULL,
-    quantity NUMERIC(10,2) NOT NULL,
-    sum NUMERIC(15,2) NOT NULL,
-    FOREIGN KEY (report_id) REFERENCES reports(id)
-);
-
+-- Заполнение таблицы expenses (сумма в reports обновится автоматически)
 INSERT INTO expenses (report_id, category, quantity, sum) VALUES
 (1, 'Командировочные расходы', 1, 12000.00),
 (1, 'Транспорт', 4, 4500.00),
@@ -95,15 +156,7 @@ INSERT INTO expenses (report_id, category, quantity, sum) VALUES
 (9, 'Маркетинг', 1, 7000.00),
 (10, 'Транспортировка', 3, 9300.00);
 
--- Создание и заполнение таблицы balances
-CREATE TABLE balances (
-    id SERIAL PRIMARY KEY,
-    employee_id INT NOT NULL,
-    month CHAR(7) NOT NULL,
-    end_balance NUMERIC(15,2) NOT NULL,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
-);
-
+-- Заполнение таблицы balances
 INSERT INTO balances (employee_id, month, end_balance) VALUES
 (1, '2025-04', 5000.00),
 (2, '2025-04', 0.00),
